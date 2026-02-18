@@ -1,6 +1,6 @@
 import { Elysia } from 'elysia';
 import { cors } from '@elysiajs/cors';
-import { staticPlugin } from '@elysiajs/static';
+import path from 'path';
 import { runMigrations } from '../database/migrate';
 import { runSeed } from '../database/seed';
 import { users } from '../database/schema';
@@ -78,18 +78,23 @@ const app = new Elysia()
     .use(transactionRoutes)
     .use(settingsRoutes)
     .use(summaryRoutes)
-    // 3. Static Files via plugin
-    .use(staticPlugin({
-        assets: 'public',
-        prefix: '/',
-        alwaysStatic: false,
-    }))
-    // 4. SPA fallback — serve index.html for all non-API routes
-    .get('*', async ({ path, set }) => {
-        if (path.startsWith('/api')) {
+    // 3. Static Files & SPA Fallback
+    .get('*', async ({ params, set }) => {
+        const reqPath = '/' + (params['*'] || '');
+
+        if (reqPath.startsWith('/api')) {
             set.status = 404;
             return { error: 'Not Found' };
         }
+
+        // Try to serve a static file first
+        const filePath = path.join('public', reqPath);
+        const file = Bun.file(filePath);
+        if (await file.exists()) {
+            return file;
+        }
+
+        // SPA fallback — serve index.html
         set.headers['Content-Type'] = 'text/html; charset=utf-8';
         return Bun.file('public/index.html');
     })
