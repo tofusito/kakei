@@ -10,78 +10,51 @@ export const dashboardRoutes = new Elysia({ prefix: '/api' })
         startOfMonth.setDate(1);
         startOfMonth.setHours(0, 0, 0, 0);
 
-        const expenses = await db.select({
-            total: sum(transactions.amount).mapWith(Number)
-        })
-            .from(transactions)
-            .leftJoin(categories, eq(transactions.categoryId, categories.id))
-            .where(
-                and(
-                    gte(transactions.createdAt, startOfMonth),
-                    eq(categories.type, 'expense')
-                )
-            );
+        // Single query for all totals using CASE WHEN + parallel with daily chart data
+        const [totalsResult, dailyData] = await Promise.all([
+            db.select({
+                expenses: sql<number>`COALESCE(SUM(CASE WHEN ${categories.type} = 'expense' THEN ${transactions.amount}::numeric ELSE 0 END), 0)`.mapWith(Number),
+                income: sql<number>`COALESCE(SUM(CASE WHEN ${categories.type} = 'income' THEN ${transactions.amount}::numeric ELSE 0 END), 0)`.mapWith(Number),
+                investments: sql<number>`COALESCE(SUM(CASE WHEN ${categories.type} = 'investment' THEN ${transactions.amount}::numeric ELSE 0 END), 0)`.mapWith(Number),
+            })
+                .from(transactions)
+                .leftJoin(categories, eq(transactions.categoryId, categories.id))
+                .where(gte(transactions.createdAt, startOfMonth)),
 
-        const income = await db.select({
-            total: sum(transactions.amount).mapWith(Number)
-        })
-            .from(transactions)
-            .leftJoin(categories, eq(transactions.categoryId, categories.id))
-            .where(
-                and(
-                    gte(transactions.createdAt, startOfMonth),
-                    eq(categories.type, 'income')
+            db.select({
+                date: sql<string>`to_char(${transactions.createdAt}, 'DD')`,
+                amount: sum(transactions.amount).mapWith(Number)
+            })
+                .from(transactions)
+                .leftJoin(categories, eq(transactions.categoryId, categories.id))
+                .where(
+                    and(
+                        gte(transactions.createdAt, startOfMonth),
+                        eq(categories.type, 'expense')
+                    )
                 )
-            );
+                .groupBy(sql`to_char(${transactions.createdAt}, 'DD')`)
+                .orderBy(sql`to_char(${transactions.createdAt}, 'DD')`)
+        ]);
 
-        const investments = await db.select({
-            total: sum(transactions.amount).mapWith(Number)
-        })
-            .from(transactions)
-            .leftJoin(categories, eq(transactions.categoryId, categories.id))
-            .where(
-                and(
-                    gte(transactions.createdAt, startOfMonth),
-                    eq(categories.type, 'investment')
-                )
-            );
-
-        const dailyData = await db.select({
-            date: sql<string>`to_char(${transactions.createdAt}, 'DD')`,
-            amount: sum(transactions.amount).mapWith(Number)
-        })
-            .from(transactions)
-            .leftJoin(categories, eq(transactions.categoryId, categories.id))
-            .where(
-                and(
-                    gte(transactions.createdAt, startOfMonth),
-                    eq(categories.type, 'expense')
-                )
-            )
-            .groupBy(sql`to_char(${transactions.createdAt}, 'DD')`)
-            .orderBy(sql`to_char(${transactions.createdAt}, 'DD')`);
+        const { expenses, income, investments } = totalsResult[0] || { expenses: 0, income: 0, investments: 0 };
 
         const chartData = dailyData.map(d => ({
             name: d.date,
             amount: d.amount
         }));
 
-        const totalIncome = income[0]?.total || 0;
-        const totalExpenses = expenses[0]?.total || 0;
-        const totalInvestments = investments[0]?.total || 0;
-
         return {
-            balance: totalIncome - totalExpenses - totalInvestments,
-            expenses: totalExpenses,
-            income: totalIncome,
-            investments: totalInvestments,
+            balance: income - expenses - investments,
+            expenses,
+            income,
+            investments,
             chartData
         };
     })
     .get('/classification-breakdown', async ({ query }) => {
         const dateCondition = buildDateCondition(query as DateFilterQuery);
 
-        // Get only expenses with classifications
         const expenseCondition = eq(categories.type, 'expense');
         const whereClause = dateCondition
             ? and(dateCondition, expenseCondition)
@@ -96,7 +69,6 @@ export const dashboardRoutes = new Elysia({ prefix: '/api' })
             .where(whereClause)
             .groupBy(transactions.classification);
 
-        // Format response with all 4 types, even if 0
         const result = {
             survival: 0,
             quality: 0,

@@ -5,15 +5,15 @@
     "": {
       "name": "finance-backend",
       "dependencies": {
-        "@elysiajs/cors": "latest",
-        "@elysiajs/jwt": "latest",
-        "drizzle-orm": "latest",
-        "elysia": "latest",
-        "postgres": "latest",
+        "@elysiajs/cors": "^1.4.1",
+        "@elysiajs/jwt": "^1.4.0",
+        "drizzle-orm": "^0.45.1",
+        "elysia": "^1.4.19",
+        "postgres": "^3.4.7",
       },
       "devDependencies": {
-        "bun-types": "latest",
-        "drizzle-kit": "latest",
+        "bun-types": "^1.3.5",
+        "drizzle-kit": "^0.31.8",
       },
     },
   },

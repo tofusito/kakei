@@ -1,0 +1,21 @@
+# Dependencies
+node_modules
+*/node_modules
+
+# Git
+.git
+.gitignore
+
+# Environment & secrets
+.env
+.env.*
+!.env.example
+
+# Documentation
+*.md
+docs
+assets
+LICENSE
+
+# Development files
+docker-compose.yaml

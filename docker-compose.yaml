@@ -13,9 +13,16 @@ services:
       - KAKEI_USER=${KAKEI_USER:-admin}
       - KAKEI_PASSWORD=${KAKEI_PASSWORD:-admin}
       - NODE_ENV=${NODE_ENV:-production}
+    restart: unless-stopped
     depends_on:
       db:
         condition: service_healthy
+    healthcheck:
+      test: ["CMD", "bun", "-e", "fetch('http://localhost:3000/api/health').then(r => r.ok ? process.exit(0) : process.exit(1))"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 10s
     networks:
       - kakei-net
 

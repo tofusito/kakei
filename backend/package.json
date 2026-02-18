@@ -9,16 +9,14 @@
     "seed": "bun run src/seed.ts"
   },
   "dependencies": {
-    "elysia": "latest",
-    "drizzle-orm": "latest",
-    "postgres": "latest",
-    "@elysiajs/jwt": "latest",
-    "@elysiajs/cors": "latest",
-    "@elysiajs/cookie": "latest",
-    "@elysiajs/static": "latest"
+    "elysia": "^1.4.19",
+    "drizzle-orm": "^0.45.1",
+    "postgres": "^3.4.7",
+    "@elysiajs/jwt": "^1.4.0",
+    "@elysiajs/cors": "^1.4.1"
   },
   "devDependencies": {
-    "bun-types": "latest",
-    "drizzle-kit": "latest"
+    "bun-types": "^1.3.5",
+    "drizzle-kit": "^0.31.8"
   }
 }
