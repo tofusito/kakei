@@ -1,6 +1,5 @@
 import { Elysia } from 'elysia';
 import { cors } from '@elysiajs/cors';
-import { cookie } from '@elysiajs/cookie';
 import { staticPlugin } from '@elysiajs/static';
 import { runMigrations } from '../database/migrate';
 import { runSeed } from '../database/seed';
@@ -20,7 +19,6 @@ const app = new Elysia()
         credentials: true,
         origin: true
     }))
-    .use(cookie())
     // Global security headers
     .onBeforeHandle(({ set }) => {
         set.headers['X-Content-Type-Options'] = 'nosniff';

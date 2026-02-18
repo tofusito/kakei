@@ -2,7 +2,7 @@
 FROM oven/bun:1-alpine AS frontend
 WORKDIR /app
 COPY frontend/package.json frontend/bun.lock ./
-RUN bun install --frozen-lockfile
+RUN bun install
 COPY frontend .
 RUN bun run build
 
@@ -12,7 +12,7 @@ WORKDIR /app
 
 # Install Backend Deps (production only)
 COPY backend/package.json backend/bun.lock ./
-RUN bun install --frozen-lockfile --production
+RUN bun install --production
 
 # Copy Backend Source
 COPY backend .

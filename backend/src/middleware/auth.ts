@@ -1,10 +1,8 @@
 import { Elysia } from 'elysia';
 import { jwt } from '@elysiajs/jwt';
-import { cookie } from '@elysiajs/cookie';
 import { config } from '../config';
 
 export const authMiddleware = new Elysia({ name: 'auth-middleware' })
-    .use(cookie())
     .use(jwt({
         name: 'jwt',
         secret: config.jwt.secret,

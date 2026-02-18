@@ -14,7 +14,6 @@
     "postgres": "^3.4.7",
     "@elysiajs/jwt": "^1.4.0",
     "@elysiajs/cors": "^1.4.1",
-    "@elysiajs/cookie": "^1.4.0",
     "@elysiajs/static": "^1.4.0"
   },
   "devDependencies": {
