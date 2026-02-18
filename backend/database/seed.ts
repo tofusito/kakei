@@ -1,9 +1,6 @@
-import { drizzle } from 'drizzle-orm/postgres-js';
-import postgres from 'postgres';
 import { categories, users } from './schema';
-
-const client = postgres(process.env.DATABASE_URL!);
-const db = drizzle(client);
+import { db } from '../src/db';
+import { count as countFn } from 'drizzle-orm';
 
 const DEFAULT_CATEGORIES = [
     // Income
@@ -35,27 +32,24 @@ export async function runSeed() {
     console.log('🌱 Seeding database...');
 
     try {
-        // Optional: Check if already seeded to avoid unnecessary truncates on restart
-        const count = await db.select({ count: categories.id }).from(categories);
-        if (count.length > 0) {
+        // Fixed: count() always returns 1 row — check the count VALUE, not array length
+        const [result] = await db.select({ total: countFn() }).from(categories);
+        if (result && result.total > 0) {
             console.log('Database already seeded, skipping.');
             return;
         }
-
-        await client`TRUNCATE TABLE categories CASCADE`;
     } catch (e) {
-        console.log('Could not truncate or check, moving on...');
+        console.log('Could not check seed status, proceeding with seed...');
     }
 
     // Seed default user
     await db.insert(users).values({
         username: 'admin',
-        passwordHash: '$argon2id$v=19$m=65536,t=3,p=4$DnF1/dZf9Yg$TjS+9q/8...' // Placeholder hash
+        passwordHash: await Bun.password.hash('admin') // Will be overwritten by onStart with real env password
     }).onConflictDoNothing();
 
-    for (const cat of DEFAULT_CATEGORIES) {
-        await db.insert(categories).values(cat).onConflictDoNothing();
-    }
+    // Batch insert all categories
+    await db.insert(categories).values([...DEFAULT_CATEGORIES]).onConflictDoNothing();
 
     console.log('✅ Seeding completed');
 }
