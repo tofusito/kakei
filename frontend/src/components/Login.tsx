@@ -43,15 +43,15 @@ export const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-orange-950/20 flex items-center justify-center px-4">
+        <div className="min-h-screen gradient-bg-dark flex items-center justify-center px-4">
             <div className="max-w-md w-full space-y-8">
                 {/* Logo y título */}
                 <div className="text-center">
                     <div className="flex justify-center mb-6">
                         <div className="w-24 h-24 rounded-full overflow-hidden shadow-2xl ring-4 ring-orange-500/20">
-                            <img 
-                                src="/apple-touch-icon.png" 
-                                alt="Kakei Logo" 
+                            <img
+                                src="/apple-touch-icon.png"
+                                alt="Kakei Logo"
                                 className="w-full h-full object-cover"
                             />
                         </div>
@@ -61,7 +61,7 @@ export const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
                 </div>
 
                 {/* Formulario de login */}
-                <div className="bg-gray-800/50 backdrop-blur-xl rounded-2xl shadow-2xl p-8 border border-gray-700">
+                <div className="glass-card rounded-2xl shadow-2xl p-8">
                     <form onSubmit={handleSubmit} className="space-y-6">
                         {/* Campo de usuario */}
                         <div>
@@ -80,7 +80,7 @@ export const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
                                     required
                                     value={username}
                                     onChange={(e) => setUsername(e.target.value)}
-                                    className="block w-full pl-10 pr-3 py-3 border border-gray-600 rounded-xl bg-gray-900/50 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                                    className="block w-full pl-10 pr-3 py-3 border border-zinc-700/50 rounded-xl bg-zinc-900/50 text-white placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
                                     placeholder="Enter your username"
                                     disabled={loading}
                                 />
@@ -104,7 +104,7 @@ export const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
                                     required
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
-                                    className="block w-full pl-10 pr-3 py-3 border border-gray-600 rounded-xl bg-gray-900/50 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
+                                    className="block w-full pl-10 pr-3 py-3 border border-zinc-700/50 rounded-xl bg-zinc-900/50 text-white placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
                                     placeholder="Enter your password"
                                     disabled={loading}
                                 />

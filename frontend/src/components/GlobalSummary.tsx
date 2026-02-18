@@ -108,13 +108,16 @@ export function GlobalSummary({ onBack, isDarkMode }: GlobalSummaryProps) {
 
     return (
         <div className={clsx(
-            "min-h-screen transition-colors duration-300 font-sans",
-            isDarkMode ? "bg-black text-zinc-200" : "bg-zinc-50 text-zinc-900"
+            "min-h-screen transition-colors duration-500 font-sans",
+            isDarkMode ? "gradient-bg-dark text-zinc-200" : "gradient-bg-light text-zinc-900"
         )}>
-            <div className="max-w-md mx-auto min-h-screen relative shadow-2xl overflow-hidden">
+            <div className="max-w-md mx-auto min-h-screen relative overflow-hidden">
 
                 {/* Header */}
-                <header className="px-6 py-6 flex items-center justify-between sticky top-0 z-50 backdrop-blur-md bg-opacity-80">
+                <header className={clsx(
+                    "px-6 py-5 flex items-center justify-between sticky top-0 z-50 backdrop-blur-xl",
+                    isDarkMode ? "bg-black/60" : "bg-white/60"
+                )}>
                     <span className={clsx(
                         "text-xs font-black tracking-[0.3em] uppercase",
                         isDarkMode ? "text-zinc-100" : "text-zinc-900"
@@ -271,10 +274,10 @@ export function GlobalSummary({ onBack, isDarkMode }: GlobalSummaryProps) {
 
                     {/* Total Expenses Card */}
                     <div className={clsx(
-                        "rounded-xl border p-6 mb-6",
+                        "rounded-2xl p-6 mb-6",
                         isDarkMode
-                            ? "bg-[#050505] border-zinc-900"
-                            : "bg-white border-zinc-200"
+                            ? "glass-card"
+                            : "glass-card-light"
                     )}>
                         <span className={clsx(
                             "text-[10px] uppercase tracking-[0.2em] font-bold block mb-2",
@@ -284,7 +287,7 @@ export function GlobalSummary({ onBack, isDarkMode }: GlobalSummaryProps) {
                         </span>
                         <span className={clsx(
                             "text-3xl font-bold tabular-nums",
-                            isDarkMode ? "text-rose-500" : "text-rose-600"
+                            isDarkMode ? "text-rose-400 glow-red" : "text-rose-600"
                         )}>
                             {loading ? '...' : formatCurrency(data?.totalExpenses || 0)}
                         </span>
@@ -292,10 +295,10 @@ export function GlobalSummary({ onBack, isDarkMode }: GlobalSummaryProps) {
 
                     {/* Category Bars */}
                     <div className={clsx(
-                        "rounded-xl border overflow-hidden",
+                        "rounded-2xl overflow-hidden",
                         isDarkMode
-                            ? "bg-[#050505] border-zinc-900"
-                            : "bg-white border-zinc-200"
+                            ? "glass-card"
+                            : "glass-card-light"
                     )}>
                         {loading ? (
                             <div className="p-6 text-center">

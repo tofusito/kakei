@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
-import { Pencil, Trash2, ChevronLeft, ChevronRight, X } from 'lucide-react';
+import { Pencil, Trash2, ChevronLeft, ChevronRight, X, Wallet } from 'lucide-react';
 import { DynamicIcon } from './shared/DynamicIcon';
 import { formatCurrency, formatDate } from '../lib/formatters';
 import type { Transaction } from '../types';
@@ -22,13 +22,27 @@ interface TransactionListProps {
     isDarkMode: boolean;
 }
 
-export function TransactionList({ 
-    transactions, 
+// Color mapping for transaction types - gives each type its own visual identity
+function getIconColors(type: string, isDarkMode: boolean) {
+    switch (type) {
+        case 'expense':
+            return isDarkMode ? 'bg-rose-500/15 text-rose-400' : 'bg-rose-100 text-rose-600';
+        case 'income':
+            return isDarkMode ? 'bg-emerald-500/15 text-emerald-400' : 'bg-emerald-100 text-emerald-600';
+        case 'investment':
+            return isDarkMode ? 'bg-blue-500/15 text-blue-400' : 'bg-blue-100 text-blue-600';
+        default:
+            return isDarkMode ? 'bg-zinc-800 text-zinc-400' : 'bg-zinc-100 text-zinc-500';
+    }
+}
+
+export function TransactionList({
+    transactions,
     pagination,
     onPageChange,
     onEdit,
     onDelete,
-    isDarkMode 
+    isDarkMode
 }: TransactionListProps) {
     const { t } = useTranslation();
     const [selectedId, setSelectedId] = useState<number | null>(null);
@@ -60,33 +74,38 @@ export function TransactionList({
     if (transactions.length === 0) {
         return (
             <div className={clsx(
-                "text-center py-12 rounded-xl border border-dashed",
+                "text-center py-16 rounded-2xl border border-dashed",
                 isDarkMode
                     ? "border-zinc-800 text-zinc-600"
                     : "border-zinc-200 text-zinc-400"
             )}>
-                <p className="text-xs font-medium">{t('common.no_transactions')}</p>
+                <Wallet size={32} className={clsx("mx-auto mb-3", isDarkMode ? "text-zinc-700" : "text-zinc-300")} />
+                <p className="text-sm font-medium mb-1">{t('common.no_transactions')}</p>
+                <p className={clsx("text-xs", isDarkMode ? "text-zinc-700" : "text-zinc-400")}>
+                    Tap the buttons above to add one
+                </p>
             </div>
         );
     }
 
     return (
-        <div className="space-y-4 pb-6">
-            {transactions.map((tr) => (
+        <div className="space-y-3 pb-6">
+            {transactions.map((tr, index) => (
                 <div
                     key={tr.id}
                     onClick={() => handleTransactionClick(tr.id)}
                     className={clsx(
-                        "relative group flex items-center justify-between p-4 rounded-xl border transition-all cursor-pointer",
+                        "relative group flex items-center justify-between p-4 rounded-2xl transition-all cursor-pointer",
                         isDarkMode
-                            ? "bg-zinc-900/50 border-zinc-800/50 hover:bg-zinc-900 hover:border-zinc-700"
-                            : "bg-white border-zinc-100 hover:border-zinc-200 hover:shadow-sm"
+                            ? "glass-card hover:bg-zinc-800/60 hover:border-zinc-700/50"
+                            : "glass-card-light hover:border-zinc-300 hover:shadow-md"
                     )}
+                    style={{ animationDelay: `${index * 50}ms` }}
                 >
                     {/* Actions Overlay */}
                     {selectedId === tr.id && (
                         <div className={clsx(
-                            "absolute inset-0 rounded-xl flex items-center justify-center gap-4 z-10 animate-in fade-in duration-150",
+                            "absolute inset-0 rounded-2xl flex items-center justify-center gap-4 z-10 animate-in fade-in duration-150",
                             isDarkMode
                                 ? "bg-zinc-900/95 backdrop-blur-sm"
                                 : "bg-white/95 backdrop-blur-sm"
@@ -95,7 +114,7 @@ export function TransactionList({
                                 <>
                                     <button
                                         onClick={(e) => handleConfirmDelete(tr.id, e)}
-                                        className="w-12 h-12 rounded-full bg-rose-500 text-white flex items-center justify-center hover:bg-rose-600 transition-all hover:scale-110 active:scale-95"
+                                        className="w-12 h-12 rounded-full bg-rose-500 text-white flex items-center justify-center hover:bg-rose-600 transition-all hover:scale-110 active:scale-95 shadow-lg shadow-rose-500/30"
                                     >
                                         <Trash2 size={20} />
                                     </button>
@@ -137,13 +156,12 @@ export function TransactionList({
 
                     <div className="flex items-center gap-4">
                         <div className={clsx(
-                            "w-10 h-10 rounded-full flex items-center justify-center transition-colors",
-                            isDarkMode ? "bg-zinc-800 group-hover:bg-zinc-700" : "bg-zinc-50 group-hover:bg-zinc-100"
+                            "w-10 h-10 rounded-xl flex items-center justify-center transition-all",
+                            getIconColors(tr.type, isDarkMode)
                         )}>
                             <DynamicIcon
                                 name={tr.icon}
                                 size={18}
-                                className={isDarkMode ? "text-zinc-400" : "text-zinc-500"}
                             />
                         </div>
                         <div>
@@ -172,8 +190,8 @@ export function TransactionList({
                             tr.type === 'expense'
                                 ? (isDarkMode ? "text-zinc-200" : "text-zinc-900")
                                 : tr.type === 'income'
-                                    ? "text-emerald-500"
-                                    : "text-blue-500"
+                                    ? "text-emerald-400"
+                                    : "text-blue-400"
                         )}>
                             {tr.type === 'expense' ? '-' : '+'}{formatCurrency(parseFloat(tr.amount))}
                         </span>
@@ -208,17 +226,15 @@ export function TransactionList({
                     >
                         <ChevronLeft size={18} />
                     </button>
-                    
+
                     <div className="flex items-center gap-1">
                         {Array.from({ length: pagination.totalPages }, (_, i) => i + 1)
                             .filter(page => {
-                                // Show first, last, current, and neighbors
                                 if (page === 1 || page === pagination.totalPages) return true;
                                 if (Math.abs(page - pagination.page) <= 1) return true;
                                 return false;
                             })
                             .map((page, idx, arr) => {
-                                // Add ellipsis if there's a gap
                                 const showEllipsis = idx > 0 && page - arr[idx - 1] > 1;
                                 return (
                                     <div key={page} className="flex items-center">
@@ -233,9 +249,7 @@ export function TransactionList({
                                             className={clsx(
                                                 "w-8 h-8 rounded-lg text-xs font-bold transition-all",
                                                 page === pagination.page
-                                                    ? isDarkMode
-                                                        ? "bg-zinc-100 text-black"
-                                                        : "bg-zinc-900 text-white"
+                                                    ? "bg-gradient-to-r from-orange-500 to-amber-500 text-white shadow-md shadow-orange-500/20"
                                                     : isDarkMode
                                                         ? "hover:bg-zinc-800 text-zinc-400"
                                                         : "hover:bg-zinc-100 text-zinc-600"
