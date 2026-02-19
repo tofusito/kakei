@@ -81,7 +81,10 @@ export function QuickAdd({
                 type === 'expense' ? "left-0" :
                     type === 'investment' ? "right-0" : "left-1/2 -translate-x-1/2"
             )}>
-                <div className="bg-[#050505] border border-zinc-900 rounded-md shadow-2xl p-1 flex flex-col gap-px max-h-[300px] overflow-y-auto">
+                <div className={clsx(
+                    "backdrop-blur-xl border rounded-xl shadow-2xl p-1 flex flex-col gap-px max-h-[300px] overflow-y-auto",
+                    isDarkMode ? "bg-zinc-900/90 border-zinc-800" : "bg-white/90 border-zinc-200"
+                )}>
                     {categories.map((cat) => (
                         <button
                             key={cat.id}
@@ -107,10 +110,10 @@ export function QuickAdd({
                 isDarkMode ? "bg-black/90" : "bg-white/90"
             )}>
                 <div className={clsx(
-                    "rounded-md p-8 w-full max-w-sm shadow-2xl relative",
+                    "rounded-2xl p-8 w-full max-w-sm shadow-2xl relative",
                     isDarkMode
-                        ? "bg-black border border-zinc-900"
-                        : "bg-white border border-zinc-200"
+                        ? "glass-card"
+                        : "glass-card-light"
                 )}>
 
                     <div className="flex justify-between absolute top-4 left-4 right-4 font-sans">
@@ -128,8 +131,8 @@ export function QuickAdd({
                         >
                             <ArrowLeft size={16} />
                         </button>
-                        <button 
-                            onClick={onClose} 
+                        <button
+                            onClick={onClose}
                             className={clsx(
                                 "p-2 transition-colors",
                                 isDarkMode

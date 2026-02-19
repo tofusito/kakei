@@ -80,12 +80,12 @@ function App() {
     // Mostrar loading mientras se verifica la autenticación
     if (isAuthenticated === null) {
         return (
-            <div className="min-h-screen bg-black flex items-center justify-center">
+            <div className="min-h-screen gradient-bg-dark flex items-center justify-center">
                 <div className="text-center">
-                    <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center shadow-2xl mb-4 mx-auto animate-pulse">
+                    <div className="w-16 h-16 bg-gradient-to-br from-orange-500 to-amber-500 rounded-2xl flex items-center justify-center shadow-2xl shadow-orange-500/20 mb-4 mx-auto animate-pulse">
                         <span className="text-2xl font-bold text-white">家</span>
                     </div>
-                    <p className="text-gray-400">Loading...</p>
+                    <p className="text-zinc-500 text-sm font-medium">Loading...</p>
                 </div>
             </div>
         );
@@ -109,13 +109,16 @@ function App() {
     // Dashboard principal (solo si está autenticado)
     return (
         <div className={clsx(
-            "min-h-screen transition-colors duration-300 font-sans selection:bg-rose-500/30",
-            isDarkMode ? "bg-black text-zinc-200" : "bg-zinc-50 text-zinc-900"
+            "min-h-screen transition-colors duration-500 font-sans selection:bg-orange-500/30",
+            isDarkMode ? "gradient-bg-dark text-zinc-200" : "gradient-bg-light text-zinc-900"
         )}>
-            <div className="max-w-md mx-auto min-h-screen relative shadow-2xl overflow-hidden bg-opacity-50">
+            <div className="max-w-md mx-auto min-h-screen relative overflow-hidden">
 
                 {/* Header */}
-                <header className="px-6 py-6 flex items-center justify-between sticky top-0 z-50 backdrop-blur-md bg-opacity-80">
+                <header className={clsx(
+                    "px-6 py-5 flex items-center justify-between sticky top-0 z-50 backdrop-blur-xl",
+                    isDarkMode ? "bg-black/60" : "bg-white/60"
+                )}>
                     <div className="flex items-center gap-3">
                         <span className={clsx(
                             "text-xs font-black tracking-[0.3em] uppercase",
@@ -176,13 +179,13 @@ function App() {
                             isDarkMode={isDarkMode}
                         />
 
-                        <TransactionList 
-                            transactions={recentTransactions} 
+                        <TransactionList
+                            transactions={recentTransactions}
                             pagination={pagination}
                             onPageChange={goToPage}
                             onEdit={(tr) => setEditingTransaction(tr)}
                             onDelete={deleteTransaction}
-                            isDarkMode={isDarkMode} 
+                            isDarkMode={isDarkMode}
                         />
                     </section>
                 </main>

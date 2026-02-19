@@ -1,0 +1,49 @@
+{
+    "common": {
+        "settings": "Ajustes",
+        "theme": "Tema",
+        "language": "Idioma",
+        "light": "Claro",
+        "dark": "Oscuro",
+        "english": "Inglés",
+        "spanish": "Español"
+    },
+    "status": {
+        "header": "Estado",
+        "income": "Ingresos",
+        "expenses": "Gastos",
+        "investment": "Inversión"
+    },
+    "nav": {
+        "expense": "Gasto",
+        "income": "Ingreso",
+        "invest": "Inversión"
+    },
+    "filters": {
+        "filter_by": "Período",
+        "expense_type": "Tipo de Gasto",
+        "transactions": "Transacciones",
+        "all_time": "Todo",
+        "this_week": "Esta Semana",
+        "this_month": "Este Mes",
+        "this_year": "Este Año",
+        "all_types": "Todos"
+    },
+    "breakdown": {
+        "header": "Desglose de Gastos",
+        "survival": "Vital",
+        "quality": "Útil",
+        "pleasure": "Capricho",
+        "waste": "Basura"
+    },
+    "quick_add": {
+        "add": "Añadir",
+        "confirm": "Confirmar",
+        "note": "Nota"
+    },
+    "types": {
+        "expense": "Gasto",
+        "income": "Ingreso",
+        "investment": "Inversión"
+    }
+}
