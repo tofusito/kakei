@@ -1,0 +1,49 @@
+{
+    "common": {
+        "settings": "Settings",
+        "theme": "Theme",
+        "language": "Language",
+        "light": "Light",
+        "dark": "Dark",
+        "english": "English",
+        "spanish": "Spanish"
+    },
+    "status": {
+        "header": "Status",
+        "income": "Income",
+        "expenses": "Expenses",
+        "investment": "Investment"
+    },
+    "nav": {
+        "expense": "Expense",
+        "income": "Income",
+        "invest": "Invest"
+    },
+    "filters": {
+        "filter_by": "Time Period",
+        "expense_type": "Expense Type",
+        "transactions": "Transactions",
+        "all_time": "All Time",
+        "this_week": "This Week",
+        "this_month": "This Month",
+        "this_year": "This Year",
+        "all_types": "All Types"
+    },
+    "breakdown": {
+        "header": "Expense Breakdown",
+        "survival": "Vital",
+        "quality": "Useful",
+        "pleasure": "Treat",
+        "waste": "Waste"
+    },
+    "quick_add": {
+        "add": "Add",
+        "confirm": "Confirm",
+        "note": "Note"
+    },
+    "types": {
+        "expense": "Expense",
+        "income": "Income",
+        "investment": "Investment"
+    }
+}
